@@ -89,6 +89,12 @@ export SIFDECODE=sifdecode
 export ARCHDEFS=archdefs
 export MASTSIF=mastsif
 
+echo "---"
+echo "CUTEst installed"
+echo "To use globally, issue the command"
+echo "  cat cutest_variables >> \$HOME/.bashrc"
+echo "---"
+
 rm -f test.log
 
 for pkg in gen77 gen90 genc
