@@ -100,17 +100,8 @@ export MANPATH=$PWD/man:\$MANPATH
 export LD_LIBRARY_PATH=$PWD/lib:\$LD_LIBRARY_PATH
 EOF
 
-## Testing
 echo "---"
 echo "CUTEst installed"
 echo "To use globally, issue the command"
 echo "  cat $cutest_file >> \$HOME/.bashrc"
 echo "---"
-
-rm -f test.log
-
-for pkg in gen77 gen90 genc
-do
-  echo "Testing $pkg"
-  ./bin/runcutest -p $pkg -D ROSENBR >> test.log
-done

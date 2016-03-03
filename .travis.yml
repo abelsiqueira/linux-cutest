@@ -4,5 +4,8 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -y gfortran libgsl0-dev
 
-script:
+install:
   - bash install.sh
+
+script:
+  - bash test.sh
