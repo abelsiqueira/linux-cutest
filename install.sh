@@ -59,8 +59,9 @@ do
   pwd
   for l in $(ls *.a)
   do
+    echo "Compiling $l"
     lname="$(basename $l .a)_$prec.so"
-    ld -fPIC -shared $l -o $lname
+    ld -fPIC -shared --whole-archive $l --no-whole-archive -o $lname -lgfortran
   done
   cd ../../../..
 done
@@ -89,11 +90,11 @@ do
 done
 
 ## Creating bashrc
-cat >> cutest_env.bashrc << EOF
+cat > cutest_env.bashrc << EOF
 export ARCHDEFS=$PWD/archdefs
 export CUTEST=$PWD/cutest
 export SIFDECODE=$PWD/sifdecode
-export MASTSIF=$PWD/sifdecode
+export MASTSIF=$PWD/mastsif
 export MYARCH=$MYARCH
 export PATH=$PWD/bin:\$PATH
 export MANPATH=$PWD/man:\$MANPATH
