@@ -6,7 +6,12 @@ set -e
 
 packs=(archdefs cutest mastsif sifdecode)
 versions=(0.1 0.2 0.1 0.3)
-MYARCH=pc64.lnx.gfo
+export MYARCH=pc64.lnx.gfo
+export CUTEST=$PWD/cutest
+export SIFDECODE=$PWD/sifdecode
+export ARCHDEFS=$PWD/archdefs
+export MASTSIF=$PWD/mastsif
+
 
 for i in $(seq 0 3)
 do
@@ -26,13 +31,14 @@ done
 if [ ! -d sifdecode/objects/$MYARCH ]; then
   cd sifdecode
   echo -e "6\n2\n2\nnny" | ./install_sifdecode
+  cd ..
 else
   echo "SifDecode already installed for $MYARCH"
 fi
 
 ## CUTEst
 if [ ! -d cutest/objects/$MYARCH ]; then
-  cd ../cutest
+  cd cutest
   echo -e "6\n2\n2\n2\n4\nnnydn" | ./install_cutest
   cd ..
 else
@@ -84,11 +90,6 @@ export MYARCH=$MYARCH
 EOF
 
 ## Testing
-export CUTEST=cutest
-export SIFDECODE=sifdecode
-export ARCHDEFS=archdefs
-export MASTSIF=mastsif
-
 echo "---"
 echo "CUTEst installed"
 echo "To use globally, issue the command"
