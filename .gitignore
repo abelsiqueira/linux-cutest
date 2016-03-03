@@ -2,7 +2,7 @@
 archdefs
 bin
 cutest
-cutest_variables.bashrc
+*.bashrc
 man
 mastsif
 sifdecode

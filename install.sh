@@ -2,6 +2,13 @@
 
 set -e
 
+echo "
+linux-installer  Copyright (C) 2016  Abel Soares Siqueira
+This program comes with ABSOLUTELY NO WARRANTY;
+This is free software, and you are welcome to redistribute it
+under certain conditions; see LICENSE.md for details.
+"
+
 ## Download and unpack everything
 
 packs=(archdefs cutest mastsif sifdecode)
