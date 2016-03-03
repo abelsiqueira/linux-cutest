@@ -2,7 +2,7 @@ language: bash
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -qq gfortran
+  - sudo apt-get install -y gfortran
 
 script:
   - bash install.sh
