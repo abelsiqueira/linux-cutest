@@ -6,12 +6,13 @@ set -e
 
 packs=(archdefs cutest mastsif sifdecode)
 versions=(0.1 0.2 0.1 0.3)
+cutest_file=cutest_env.bashrc
+
 export MYARCH=pc64.lnx.gfo
 export CUTEST=$PWD/cutest
 export SIFDECODE=$PWD/sifdecode
 export ARCHDEFS=$PWD/archdefs
 export MASTSIF=$PWD/mastsif
-
 
 for i in $(seq 0 3)
 do
@@ -81,19 +82,22 @@ do
 done
 
 ## Creating bashrc
-cat >> cutest_variables.bashrc << EOF
+cat >> cutest_env.bashrc << EOF
 export ARCHDEFS=$PWD/archdefs
 export CUTEST=$PWD/cutest
 export SIFDECODE=$PWD/sifdecode
 export MASTSIF=$PWD/sifdecode
 export MYARCH=$MYARCH
+export PATH=$PWD/bin:\$PATH
+export MANPATH=$PWD/man:\$MANPATH
+export LD_LIBRARY_PATH=$PWD/lib:\$LD_LIBRARY_PATH
 EOF
 
 ## Testing
 echo "---"
 echo "CUTEst installed"
 echo "To use globally, issue the command"
-echo "  cat cutest_variables >> \$HOME/.bashrc"
+echo "  cat $cutest_file >> \$HOME/.bashrc"
 echo "---"
 
 rm -f test.log
@@ -101,5 +105,5 @@ rm -f test.log
 for pkg in gen77 gen90 genc
 do
   echo "Testing $pkg"
-  runcutest -p $pkg -D ROSENBR >> test.log
+  ./bin/runcutest -p $pkg -D ROSENBR >> test.log
 done
