@@ -3,6 +3,7 @@ language: bash
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -y gfortran libgsl0-dev
+  - sudo ln -s /usr/lib/gcc/x86_64-linux-gnu/$(gfortran -dumpversion | cut -f1,2 -d.)/libgfortran.so /usr/local/lib
 
 install:
   - bash install.sh

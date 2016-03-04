@@ -32,8 +32,13 @@ Then you'll need to add some lines to your `.bashrc`, with the command
 
 ## Requirements
 
-You need at least `wget`, `gfortran` and `libgsl`. On Ubuntu, you should use
+You need at least `wget`, `gfortran` and `libgsl`. You also need
+`libgfortran.so` to be visible by your system.
+
+### Ubuntu
+
+This was tested on Ubuntu 12.04 from Travis
 
     sudo apt-get install wget gfortran libgsl0-dev
-
-If you are using a different system and needed something different, please let me know.
+    sudo ln -s /usr/lib/gcc/x86_64-linux-gnu/$(gfortran -dumpversion | \
+      cut -f1,2 -d.)/libgfortran.so /usr/local/lib/
