@@ -2,7 +2,7 @@ language: bash
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -y gfortran libgsl0-dev libgfortran
+  - sudo apt-get install -y gfortran libgsl0-dev libgfortran3
 
 install:
   - bash install.sh
