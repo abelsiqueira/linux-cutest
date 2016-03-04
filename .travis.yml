@@ -2,10 +2,11 @@ language: bash
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -y gfortran libgsl0-dev libgfortran3
+  - sudo apt-get install -y gfortran libgsl0-dev
+  - sudo apt-get install -y libgfortran-$(gfortran -dumpversion | cut -d. -f1,2)-dev
 
 install:
-  - LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu bash install.sh
+  - bash install.sh
 
 script:
   - bash test.sh
