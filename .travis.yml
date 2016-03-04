@@ -5,7 +5,7 @@ before_install:
   - sudo apt-get install -y gfortran libgsl0-dev
 
 install:
-  - LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/$(gfortran -dumpversion | cut -f1,2 -d.) bash install.sh
+  - LD_LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/$(gfortran -dumpversion | cut -f1,2 -d.) bash install.sh
 
 script:
   - bash test.sh
