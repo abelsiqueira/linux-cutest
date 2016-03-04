@@ -56,13 +56,9 @@ fi
 for prec in double
 do
   cd cutest/objects/$MYARCH/$prec
-  pwd
-  for l in $(ls *.a)
-  do
-    echo "Compiling $l"
-    lname="$(basename $l .a)_$prec.so"
-    ld -fPIC -shared --whole-archive $l --no-whole-archive -o $lname -lgfortran
-  done
+  l=libcutest.a
+  lname="$(basename $l .a)_$prec.so"
+  ld -fPIC -shared --whole-archive $l --no-whole-archive -o $lname -lgfortran
   cd ../../../..
 done
 
@@ -96,8 +92,8 @@ export CUTEST=$PWD/cutest
 export SIFDECODE=$PWD/sifdecode
 export MASTSIF=$PWD/mastsif
 export MYARCH=$MYARCH
-export PATH=$PWD/bin:\$PATH
-export MANPATH=$PWD/man:\$MANPATH
+export PATH=$CUTEST/bin:$SIFDECODE/bin:\$PATH
+export MANPATH=$CUTEST/man:$SIFDECODE/man:\$MANPATH
 export LD_LIBRARY_PATH=$PWD/lib:\$LD_LIBRARY_PATH
 EOF
 
