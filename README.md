@@ -15,8 +15,9 @@ This script uses the git versions of the CUTEst repository, namely
 [archdefs-mirror](http://github.com/optimizers/archdefs-mirror),
 [sifdecode-mirror](http://github.com/optimizers/sifdecode-mirror).
 
-Also check the Julia interface for CUTEst,
-[CUTEst.jl](http://github.com/JuliaOptimizers/CUTEst.jl).
+The Julia interface for CUTEst,
+[CUTEst.jl](http://github.com/JuliaOptimizers/CUTEst.jl),
+uses this script to install CUTEst for linux.
 
 ## Install
 
@@ -37,8 +38,20 @@ You need at least `wget`, `gfortran` and `libgsl`. You also need
 
 ### Ubuntu
 
-This was tested on Ubuntu 12.04 from Travis
+On Ubuntu, this can be done with
+```
+sudo apt-get install wget gfortran libgsl0-dev
+```
+and then you have to find `libgfortran.so`, which is probably
+```
+ls /usr/lib/gcc/x86_64-linux-gnu/XXX/
+```
+where XXX is some version number (for instance 5.4.0).
+After found, use
+```
+sudo ln -s /usr/lib/gcc/x86_64-linux-gnu/XXX/libgfortran.so /usr/local/lib
+```
 
-    sudo apt-get install wget gfortran libgsl0-dev
-    sudo ln -s /usr/lib/gcc/x86_64-linux-gnu/$(gfortran -dumpversion | \
-      cut -f1,2 -d.)/libgfortran.so /usr/local/lib/
+### Other systems
+
+Open an issue so I can help you, or a Pull Request helping me.
