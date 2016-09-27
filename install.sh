@@ -16,7 +16,7 @@ under certain conditions; see LICENSE.md for details.
 ## Install gfortran
 if ! gfortran &> /dev/null; then
   echo "You need to install gfortran"
-  on_ubuntu() && echo "use `sudo apt-get install gfortran`"
+  on_ubuntu && echo "use `sudo apt-get install gfortran`"
   exit 1
 fi
 
@@ -117,7 +117,7 @@ echo "---"
 # Need libgsl.so
 if ! ldconfig -p | grep libgsl.so > /dev/null; then
   echo "libgsl.so not found, you need to install it."
-  on_ubuntu() && echo "use `sudo apt-get install libgsl0-dev`"
+  on_ubuntu && echo "use `sudo apt-get install libgsl0-dev`"
 fi
 
 # gfortran is installed, but maybe it is "hidden"
