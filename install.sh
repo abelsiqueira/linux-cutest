@@ -14,9 +14,9 @@ under certain conditions; see LICENSE.md for details.
 "
 
 ## Install gfortran
-if ! gfortran &> /dev/null; then
+if ! which gfortran &> /dev/null; then
   echo "You need to install gfortran"
-  on_ubuntu && echo "use `sudo apt-get install gfortran`"
+  on_ubuntu && echo "use 'sudo apt-get install gfortran'"
   exit 1
 fi
 
@@ -117,7 +117,7 @@ echo "---"
 # Need libgsl.so
 if ! ldconfig -p | grep libgsl.so > /dev/null; then
   echo "libgsl.so not found, you need to install it."
-  on_ubuntu && echo "use `sudo apt-get install libgsl0-dev`"
+  on_ubuntu && echo "use 'sudo apt-get install libgsl0-dev'"
 fi
 
 # gfortran is installed, but maybe it is "hidden"
@@ -126,15 +126,15 @@ if ! ldconfig -p | grep libgfortran.so > /dev/null; then
   findout=$(find /usr/lib/gcc/x86_64-pi-linux-gnu/ -name "libgfortran.so")
   # Not there
   if [ -z "$findout" ]; then
-    echo "libgfortran.so not found. Try `sudo find / -name "libgfortran.so"`"
-    echo "If found this way, use `sudo ln -s FULLPATH /usr/local/lib`"
+    echo "libgfortran.so not found. Try 'sudo find / -name "libgfortran.so"'"
+    echo "If found this way, use 'sudo ln -s FULLPATH /usr/local/lib'"
   elif [ $(echo $findout | wc -w) == 1 ]; then
-    echo "Enter `ln -s $findout /usr/local/lib`"
+    echo "Enter 'ln -s $findout /usr/local/lib'"
   else
     echo "Found more than one libgfortran.so:"
     for f in $findout; do echo "  $f"; done
-    echo "Try `ln -s FULLPATH /usr/local/lib` for one of then."
-    echo "If that doesn't work, `rm -f /usr/local/lib/libgfortran.so`"
+    echo "Try 'ln -s FULLPATH /usr/local/lib' for one of then."
+    echo "If that doesn't work, 'rm -f /usr/local/lib/libgfortran.so'"
     echo "and try with another"
   fi
 fi
