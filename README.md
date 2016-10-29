@@ -33,12 +33,13 @@ Then you'll need to add some lines to your `.bashrc`, with the command
 
 ## Requirements
 
-You need at least `wget`, `gfortran` and `libgsl`. You also need
-`libgfortran.so` to be visible by your system.
+You need at least `wget`, `gfortran` and `gsl` version 1.16. You also need
+`libgfortran.so` to be visible by your system, which may need additional
+commands.
 
-### Ubuntu
+### Ubuntu 14.04
 
-On Ubuntu, this can be done with
+On Ubuntu 14.04, this can be done with
 ```
 sudo apt-get install wget gfortran libgsl0-dev
 ```
@@ -50,6 +51,28 @@ where XXX is some version number (for instance 5.4.0).
 After found, use
 ```
 sudo ln -s /usr/lib/gcc/x86_64-linux-gnu/XXX/libgfortran.so /usr/local/lib
+```
+
+### Ubuntu 16.04
+
+Install `wget` and `gfortran`.
+```
+sudo apt-get install wget gfortran
+```
+
+You'll have to manually install gsl-1.16.
+Download gsl-1.16 from http://mirror.nbtelecom.com.br/gnu/gsl/gsl-1.16.tar.gz
+then issue the following commands
+```
+tar -zxf gsl-1.16.tar.gz
+cd gsl-1.16
+./configure
+make
+sudo make install
+```
+Finally, you'll need to make `libgfortran.so` visible. Probably with
+```
+sudo ln -s /usr/lib/x86_64-linux-gnu/libgfortra.so.3 /usr/lib/
 ```
 
 ### Other systems
