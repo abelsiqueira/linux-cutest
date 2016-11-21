@@ -1,7 +1,26 @@
 #!/bin/bash
 
 function on_ubuntu() {
-  which apt-get &> /dev/null
+  #which apt-get &> /dev/null
+  true
+}
+
+function install_deps() {
+  ## Install libgsl
+  if ! ldconfig -p | grep libgsl.so > /dev/null; then
+    if on_ubuntu; then
+      sudo apt-get install libgsl0-dev
+    fi
+  fi
+
+  if ! which gfortran &> /dev/null; then
+    if on_ubuntu; then
+      sudo apt-get install gfortran
+      findout=$(find /usr/lib/gcc/x86_64-linux-gnu/ -name "libgfortran.so")
+      echo $findout
+      sudo ln -s $findout /usr/local/lib/
+    fi
+  fi
 }
 
 set -e
@@ -13,11 +32,23 @@ This is free software, and you are welcome to redistribute it
 under certain conditions; see LICENSE.md for details.
 "
 
-## Install gfortran
-if ! which gfortran &> /dev/null; then
-  echo "You need to install gfortran"
-  on_ubuntu && echo "use 'sudo apt-get install gfortran'"
-  exit 1
+force="no"
+while [[ $# -gt 0 ]]
+do
+  key=$1
+  case $key in
+    --install-deps)
+      force="yes"
+      ;;
+    *)
+      echo "Unknown option $key"
+      ;;
+  esac
+  shift
+done
+
+if [ "$force" == "yes" ]; then
+  install_deps
 fi
 
 ## Download and unpack everything
