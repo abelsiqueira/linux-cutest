@@ -154,7 +154,7 @@ fi
 # gfortran is installed, but maybe it is "hidden"
 if ! ldconfig -p | grep libgfortran.so > /dev/null; then
   # Maybe it's on gcc folder?
-  findout=$(find /usr/lib/gcc/x86_64-pi-linux-gnu/ -name "libgfortran.so")
+  findout=$(find /usr/lib/gcc/x86_64-linux-gnu/ -name "libgfortran.so")
   # Not there
   if [ -z "$findout" ]; then
     echo "libgfortran.so not found. Try 'sudo find / -name "libgfortran.so"'"
