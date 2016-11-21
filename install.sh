@@ -7,9 +7,11 @@ function on_ubuntu() {
 function install_deps() {
   ## Install libgsl
   if ! ldconfig -p | grep libgsl.so > /dev/null; then
-    if on_ubuntu; then
-      sudo apt-get install libgsl0-dev
-    fi
+    wget ftp://ftp.gnu.org/gnu/gsl/gsl-1.16.tar.gz
+    tar -zxf gsl-1.16.tar.gz
+    cd gsl-1.16
+    ./configure && make && sudo make install
+    cd ..
   fi
 
   if ! which gfortran &> /dev/null; then
