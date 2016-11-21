@@ -21,8 +21,17 @@ uses this script to install CUTEst for linux.
 
 ## Install
 
-After installing the [Requirements](#requirements),
-simply enter the command
+CUTEst has a few dependencies. If you want to let te script tries to install
+them to you, issue
+
+    ./install.sh --install-deps
+
+If you tried to install automatically the dependencies and the script failed,
+you can help me by opening a pull-request or at least an issue informing what
+went wrong.
+
+To install manually the dependencies, check the [Requirements](#requirements),
+and then enter the command
 
     ./install.sh
 
