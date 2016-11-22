@@ -4,6 +4,10 @@ function on_ubuntu() {
   which apt-get &> /dev/null
 }
 
+function on_arch() {
+  which pacman &> /dev/null
+}
+
 function install_deps() {
   ## Install libgsl
   if ! ldconfig -p | grep libgsl.so > /dev/null; then
@@ -18,8 +22,14 @@ function install_deps() {
     if on_ubuntu; then
       sudo apt-get install gfortran
       findout=$(find /usr/lib/gcc/x86_64-linux-gnu/ -name "libgfortran.so")
+      if [ -z "$findout" ]; then
+        echo "libgfortran.so not found in /usr/lib/gcc/x86_64-linux-gnu"
+        findout=$(find /usr/lib -name "libgfortran.so")
+      fi
       echo $findout
       sudo ln -s $findout /usr/local/lib/
+    elif on_arch; then
+      sudo pacman -S gcc-fortran
     fi
   fi
 }
