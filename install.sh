@@ -157,7 +157,7 @@ echo "  cat $cutest_file >> \$HOME/.bashrc"
 echo "---"
 
 # Need libgsl.so
-if ! ldconfig -p | grep libgsl.so > /dev/null; then
+if [ -z "$(ldconfig -p | grep libgsl.so)" -a ! -f /usr/local/lib/libgsl.so ]; then
   echo "libgsl.so not found, you need to install it."
   on_ubuntu && echo "use 'sudo apt-get install libgsl0-dev'"
 fi
