@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 function on_ubuntu() {
   which apt-get &> /dev/null
 }
@@ -9,18 +11,21 @@ function on_arch() {
 }
 
 function install_deps() {
+  on_ubuntu && cmd="sudo apt-get install gfortran"
+  on_arch && cmd="sudo pacman -S wget gzip gcc-fortran"
+  [ ! -z "$cmd" ] && echo -e "Installing dependencies\n$cmd" && $cmd
+
   ## Install libgsl
   if ! ldconfig -p | grep libgsl.so > /dev/null; then
     wget ftp://ftp.gnu.org/gnu/gsl/gsl-1.16.tar.gz
     tar -zxf gsl-1.16.tar.gz
     cd gsl-1.16
-    ./configure && make && sudo make install
+    ./configure && make -j5 && sudo make install
     cd ..
   fi
 
-  if ! which gfortran &> /dev/null; then
+  if [ -z "$(ldconfig -p | grep libgfortran.so$)" ]; then
     if on_ubuntu; then
-      sudo apt-get install gfortran
       findout=$(find /usr/lib/gcc/x86_64-linux-gnu/ -name "libgfortran.so")
       if [ -z "$findout" ]; then
         echo "libgfortran.so not found in /usr/lib/gcc/x86_64-linux-gnu"
@@ -28,13 +33,9 @@ function install_deps() {
       fi
       echo $findout
       sudo ln -s $findout /usr/local/lib/
-    elif on_arch; then
-      sudo pacman -S gcc-fortran
     fi
   fi
 }
-
-set -e
 
 echo "
 linux-installer  Copyright (C) 2016  Abel Soares Siqueira
