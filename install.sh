@@ -2,6 +2,29 @@
 
 set -e
 
+function usage() {
+  echo "Usage:
+./install.sh [OPTIONS]
+
+    This command installs CUTEst downloading the required packages and creating
+    a file in the end with the configuration to be added to your .bashrc file.
+
+    Options:
+
+      -h, --help      Show this help.
+      --install-deps  Install the required dependencies. Mainly gsl-1.16 and
+                      gfortran, but some distributions may require other
+                      packages too."
+}
+
+function header() {
+  echo "linux-installer  Copyright (C) 2016  Abel Soares Siqueira
+This program comes with ABSOLUTELY NO WARRANTY;
+This is free software, and you are welcome to redistribute it
+under certain conditions; see LICENSE.md for details.
+"
+}
+
 function on_ubuntu() {
   which apt-get &> /dev/null
 }
@@ -37,13 +60,6 @@ function install_deps() {
   fi
 }
 
-echo "
-linux-installer  Copyright (C) 2016  Abel Soares Siqueira
-This program comes with ABSOLUTELY NO WARRANTY;
-This is free software, and you are welcome to redistribute it
-under certain conditions; see LICENSE.md for details.
-"
-
 force="no"
 while [[ $# -gt 0 ]]
 do
@@ -52,12 +68,20 @@ do
     --install-deps)
       force="yes"
       ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
     *)
-      echo "Unknown option $key"
+      echo "ERROR: unrecognized option '$key'"
+      usage
+      exit 1
       ;;
   esac
   shift
 done
+
+header
 
 if [ "$force" == "yes" ]; then
   install_deps
