@@ -25,6 +25,26 @@ under certain conditions; see LICENSE.md for details.
 "
 }
 
+function fix_libgfortran() {
+  [ ! -z "$(ldconfig -p | grep libgfortran.so$)" ] && return
+  possible_paths=("/usr/local/lib" "/usr/lib" "/usr/lib/gcc/x86_64-linux-gnu/")
+  echo $possible_paths
+  for path in ${possible_paths[@]}
+  do
+    echo $path
+    libs=$(find $path -name "libgfortran.so")
+    for lib in $libs
+    do
+      echo $lib
+      if [ ! -z "$(nm $lib | grep 'GFORTRAN_1.3')" ]; then
+        ln -s $lib .
+        return
+      fi
+    done
+  done
+  echo "ERROR: libgfortran.so could not be found"
+}
+
 function on_ubuntu() {
   which apt-get &> /dev/null
 }
@@ -86,6 +106,8 @@ header
 if [ "$force" == "yes" ]; then
   install_deps
 fi
+
+fix_libgfortran
 
 ## Download and unpack everything
 
@@ -180,12 +202,6 @@ echo "CUTEst installed"
 echo "To use globally, issue the command"
 echo "  cat $cutest_file >> \$HOME/.bashrc"
 echo "---"
-
-# Need libgsl.so
-if [ -z "$(ldconfig -p | grep libgsl.so)" -a ! -f /usr/local/lib/libgsl.so ]; then
-  echo "libgsl.so not found, you need to install it."
-  on_ubuntu && echo "use 'sudo apt-get install libgsl0-dev'"
-fi
 
 # gfortran is installed, but maybe it is "hidden"
 if ! ldconfig -p | grep libgfortran.so > /dev/null; then
