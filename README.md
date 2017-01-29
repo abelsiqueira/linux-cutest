@@ -81,7 +81,7 @@ sudo make install
 ```
 Finally, you'll need to make `libgfortran.so` visible. Probably with
 ```
-sudo ln -s /usr/lib/x86_64-linux-gnu/libgfortra.so.3 /usr/lib/
+sudo ln -s /usr/lib/x86_64-linux-gnu/libgfortran.so.3 /usr/local/lib/libgfortran.so
 ```
 
 ### Other systems
