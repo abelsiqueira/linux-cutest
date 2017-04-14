@@ -112,7 +112,8 @@ fix_libgfortran
 ## Download and unpack everything
 
 packs=(archdefs cutest mastsif sifdecode)
-versions=(0.1 0.2 0.1 0.3)
+versions=(0.2 0.3 0.2 0.4)
+service=(github github gitlab github)
 cutest_file=cutest_env.bashrc
 
 export MYARCH=pc64.lnx.gfo
@@ -129,16 +130,22 @@ do
     echo "$p already downloaded. Skipping"
     continue
   fi
-  wget "https://github.com/optimizers/${p}-mirror/archive/v$v.tar.gz"
-  tar -zxf v$v.tar.gz
-  mv ${p}-mirror-$v $p
-  rm -f v$v.tar.gz
+  if [ ${service[$i]} == "github" ]; then
+    url="https://github.com/optimizers/${p}-mirror/archive/v$v.tar.gz"
+  elif [ ${service[$i]} == "gitlab" ]; then
+    url="https://gitlab.com/dpo/${p}-mirror/repository/archive.tar.gz?ref=v$v"
+  fi
+  wget $url -O $p.tar.gz
+  output_dir=$(tar --exclude='*/*' -ztf $p.tar.gz)
+  tar -zxf $p.tar.gz
+  mv $output_dir $p
+  rm -f $p.tar.gz
 done
 
 ## Sifdecode
 if [ ! -d sifdecode/objects/$MYARCH ]; then
   cd sifdecode
-  echo -e "6\n2\n2\nnny" | ./install_sifdecode
+  echo -e "6\n2\n4\nnny" | ./install_sifdecode
   cd ..
 else
   echo "SifDecode already installed for $MYARCH"
@@ -147,7 +154,7 @@ fi
 ## CUTEst
 if [ ! -d cutest/objects/$MYARCH ]; then
   cd cutest
-  echo -e "6\n2\n2\n2\n4\nnnydn" | ./install_cutest
+  echo -e "6\n2\n4\n2\n7\nnnyDn" | ./install_cutest
   cd ..
 else
   echo "CUTEst already installed for $MYARCH"
