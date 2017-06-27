@@ -1,5 +1,7 @@
 #!/bin/bash
 
+VERSION=0.2.1
+
 set -e
 
 function usage() {
@@ -11,14 +13,16 @@ function usage() {
 
     Options:
 
+      -v, --version   Shows the version.
       -h, --help      Show this help.
       --install-deps  Install the required dependencies. Mainly gsl-1.16 and
                       gfortran, but some distributions may require other
-                      packages too."
+                      packages too.
+      "
 }
 
 function header() {
-  echo "linux-installer  Copyright (C) 2016  Abel Soares Siqueira
+  echo "linux-cutest $VERSION Copyright (C) 2016-2017  Abel Soares Siqueira
 This program comes with ABSOLUTELY NO WARRANTY;
 This is free software, and you are welcome to redistribute it
 under certain conditions; see LICENSE.md for details.
@@ -80,6 +84,17 @@ function install_deps() {
   fi
 }
 
+# Compare two version A and B
+# true if A > B
+function version_compare() {
+  if [ $# -lt 2 ]; then
+    echo "Needs two arguments"
+    exit 1
+  fi
+  lowest=$(echo -e "$1\n$2" | sort -V | head -n 1)
+  [ "$lowest" != "$1" ] && echo "yes" || echo "no"
+}
+
 force="no"
 while [[ $# -gt 0 ]]
 do
@@ -90,6 +105,10 @@ do
       ;;
     -h|--help)
       usage
+      exit 0
+      ;;
+    -v|--version)
+      echo $VERSION
       exit 0
       ;;
     *)
@@ -115,6 +134,29 @@ packs=(archdefs cutest mastsif sifdecode)
 versions=(0.2 0.3 0.3 0.4)
 service=(github github gitlab github)
 cutest_file=cutest_env.bashrc
+d_packs=(no no no no)
+
+# Check if cutest_file exists, and if only an updated is required
+if [ -f $cutest_file ]; then
+  source $cutest_file
+  # For old installations
+  if [ -z "$cutest_version" ]; then
+    d_packs=(yes yes yes yes)
+  else
+    for i in $(seq 0 3)
+    do
+      eval installed_version=\$${packs[$i]}_version
+      d_packs[$i]=$(version_compare ${versions[$i]} $installed_version)
+    done
+  fi
+else
+  d_packs=(yes yes yes yes)
+fi
+if [ "${d_packs[1]}" == "yes" -o "${d_packs[3]}" == "yes" ]; then
+  compile=yes
+else
+  compile=no
+fi
 
 export MYARCH=pc64.lnx.gfo
 export CUTEST=$PWD/cutest
@@ -126,9 +168,11 @@ for i in $(seq 0 3)
 do
   p=${packs[$i]}
   v=${versions[$i]}
-  if [ -d ${p} ]; then
+  if [ "${d_packs[$i]}" == "no" ]; then
     echo "$p already downloaded. Skipping"
     continue
+  elif [ -d ${packs[$i]} ]; then
+    rm -rf ${packs[$i]}
   fi
   if [ ${service[$i]} == "github" ]; then
     url="https://github.com/optimizers/${p}-mirror/archive/v$v.tar.gz"
@@ -142,22 +186,23 @@ do
   rm -f $p.tar.gz
 done
 
-## Sifdecode
-if [ ! -d sifdecode/objects/$MYARCH ]; then
+if [ "$compile" == "yes" ]; then
+  ## Sifdecode
   cd sifdecode
+  # Uninstall current sifdecode, if any
+  if [ -d objects/$MYARCH/double ]; then
+    echo -e "1\ny\nn" | ./uninstall_sifdecode
+  fi
   echo -e "6\n2\n4\nnny" | ./install_sifdecode
   cd ..
-else
-  echo "SifDecode already installed for $MYARCH"
-fi
 
-## CUTEst
-if [ ! -d cutest/objects/$MYARCH ]; then
+  ## CUTEst
   cd cutest
+  if [ -d objects/$MYARCH/double ]; then
+    echo -e "1\ny\nn" | ./uninstall_cutest
+  fi
   echo -e "6\n2\n4\n2\n7\nnnyDn" | ./install_cutest
   cd ..
-else
-  echo "CUTEst already installed for $MYARCH"
 fi
 
 for prec in double
@@ -202,7 +247,12 @@ export MYARCH=$MYARCH
 export PATH=$CUTEST/bin:$SIFDECODE/bin:\$PATH
 export MANPATH=$CUTEST/man:$SIFDECODE/man:\$MANPATH
 export LD_LIBRARY_PATH=$PWD/lib:\$LD_LIBRARY_PATH
+
 EOF
+for i in $(seq 0 3)
+do
+  echo "export ${packs[$i]}_version=${versions[$i]}" >> cutest_env.bashrc
+done
 
 echo "---"
 echo "CUTEst installed"
