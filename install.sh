@@ -149,13 +149,13 @@ if [ -f $cutest_file ]; then
       d_packs[$i]=$(version_compare ${versions[$i]} $installed_version)
     done
   fi
-  if [ "${d_packs[1]}" == "yes" -o "${d_packs[3]}" == "yes" ]; then
-    compile=yes
-  else
-    compile=no
-  fi
 else
   d_packs=(yes yes yes yes)
+fi
+if [ "${d_packs[1]}" == "yes" -o "${d_packs[3]}" == "yes" ]; then
+  compile=yes
+else
+  compile=no
 fi
 
 export MYARCH=pc64.lnx.gfo
