@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=0.2.1
+VERSION=0.3
 
 set -e
 
@@ -22,7 +22,7 @@ function usage() {
 }
 
 function header() {
-  echo "linux-cutest 0.2.1 Copyright (C) 2016-2017  Abel Soares Siqueira
+  echo "linux-cutest $VERSION Copyright (C) 2016-2017  Abel Soares Siqueira
 This program comes with ABSOLUTELY NO WARRANTY;
 This is free software, and you are welcome to redistribute it
 under certain conditions; see LICENSE.md for details.
