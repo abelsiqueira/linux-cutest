@@ -154,6 +154,8 @@ if [ -f $cutest_file ]; then
   else
     compile=no
   fi
+else
+  d_packs=(yes yes yes yes)
 fi
 
 export MYARCH=pc64.lnx.gfo
