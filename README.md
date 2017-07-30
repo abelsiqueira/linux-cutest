@@ -13,7 +13,7 @@ This script uses the git versions of the CUTEst repository, namely
 [cutest-mirror](http://github.com/optimizers/cutest-mirror),
 [sifdecode-mirror](http://github.com/optimizers/sifdecode-mirror),
 [archdefs-mirror](http://github.com/optimizers/archdefs-mirror),
-[sifdecode-mirror](http://github.com/optimizers/sifdecode-mirror).
+[mastsif-mirror](http://gitlab.com/dpo/mastsif-mirror).
 
 The Julia interface for CUTEst,
 [CUTEst.jl](http://github.com/JuliaOptimizers/CUTEst.jl),

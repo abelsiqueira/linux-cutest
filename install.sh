@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=0.3
+VERSION=0.3.1
 
 set -e
 
@@ -131,7 +131,7 @@ fix_libgfortran
 ## Download and unpack everything
 
 packs=(archdefs cutest mastsif sifdecode)
-versions=(0.2 0.3 0.3 0.4)
+versions=(0.2 0.4 0.3 0.4)
 service=(github github gitlab github)
 cutest_file=cutest_env.bashrc
 d_packs=(no no no no)
