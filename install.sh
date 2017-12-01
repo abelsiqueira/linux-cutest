@@ -1,6 +1,7 @@
 #!/bin/bash
 
 VERSION=0.3.1
+LIBGFORTRANDEST=/usr/local/lib
 
 set -e
 
@@ -13,11 +14,13 @@ function usage() {
 
     Options:
 
-      -v, --version   Shows the version.
-      -h, --help      Show this help.
-      --install-deps  Install the required dependencies. Mainly gsl-1.16 and
-                      gfortran, but some distributions may require other
-                      packages too.
+      -v, --version        Shows the version.
+      -h, --help           Show this help.
+      --libgfortran-dest   Destination for a link to libgfortran.
+                           Defaults to /usr/local/lib.
+      --install-deps       Install the required dependencies. Mainly gsl-1.16 and
+                           gfortran, but some distributions may require other
+                           packages too.
       "
 }
 
@@ -29,24 +32,30 @@ under certain conditions; see LICENSE.md for details.
 "
 }
 
-function fix_libgfortran() {
-  [ ! -z "$(ldconfig -p | grep libgfortran.so$)" ] && return
-  possible_paths=("/usr/local/lib" "/usr/lib" "/usr/lib/gcc/x86_64-linux-gnu/")
-  echo $possible_paths
+# Objective: Link libgfortran.so to LIBGFORTRANDEST
+function link_libgfortran() {
+  [ -z "$LIBGFORTRANDEST" ] && echo "Warning: LIBGFORTRANDEST is empty. Not linking." && return
+  SUDO=""
+  [ -f "$LIBGFORTRANDEST/libgfortran.so" ] && echo "Warning: libgfortran.so already found on $LIBGFORTRANDEST." && return
+  possible_paths=("/usr/local/lib" "/usr/lib/gcc/x86_64-linux-gnu/" "/usr/lib")
   for path in ${possible_paths[@]}
   do
-    echo $path
-    libs=$(find $path -name "libgfortran.so")
-    for lib in $libs
+    findout=$(find $path -name "libgfortran.so" 2>/dev/null || echo "notfound")
+    [[ "$findout" == "notfound" ]] && continue
+    for lib in $findout
     do
-      echo $lib
-      if [ ! -z "$(nm $lib | grep 'GFORTRAN_1.3')" ]; then
-        ln -s $lib .
-        return
+      mkdir -p $LIBGFORTRANDEST
+      if [ ! -w "$LIBGFORTRANDEST" ]; then
+        SUDO=sudo
+        echo "Warning: Need sudo to link libgfortran.so from $lib to $LIBGFORTRANDEST"
       fi
+      $SUDO ln -s $lib $LIBGFORTRANDEST
+      found="true"
+      return
     done
   done
   echo "ERROR: libgfortran.so could not be found"
+  exit 1
 }
 
 function on_ubuntu() {
@@ -71,17 +80,6 @@ function install_deps() {
     cd ..
   fi
 
-  if [ -z "$(ldconfig -p | grep libgfortran.so$)" ]; then
-    if on_ubuntu; then
-      findout=$(find /usr/lib/gcc/x86_64-linux-gnu/ -name "libgfortran.so" 2>/dev/null || echo "notfound")
-      if [[ "$findout" == "notfound" ]]; then
-        echo "libgfortran.so not found in /usr/lib/gcc/x86_64-linux-gnu"
-        findout=$(find /usr/lib -name "libgfortran.so")
-      fi
-      echo $findout
-      sudo ln -s $findout /usr/local/lib/
-    fi
-  fi
 }
 
 # Compare two version A and B
@@ -95,11 +93,17 @@ function version_compare() {
   [ "$lowest" != "$1" ] && echo "yes" || echo "no"
 }
 
+# --------------------------------------------------------------
+
 force="no"
 while [[ $# -gt 0 ]]
 do
   key=$1
   case $key in
+    --libgfortran-dest)
+      LIBGFORTRANDEST=$2
+      shift
+      ;;
     --install-deps)
       force="yes"
       ;;
@@ -126,7 +130,7 @@ if [ "$force" == "yes" ]; then
   install_deps
 fi
 
-fix_libgfortran
+link_libgfortran
 
 ## Download and unpack everything
 
@@ -259,22 +263,3 @@ echo "CUTEst installed"
 echo "To use globally, issue the command"
 echo "  cat $cutest_file >> \$HOME/.bashrc"
 echo "---"
-
-# gfortran is installed, but maybe it is "hidden"
-if ! ldconfig -p | grep libgfortran.so > /dev/null; then
-  # Maybe it's on gcc folder?
-  findout=$(find /usr/lib/gcc/x86_64-linux-gnu/ -name "libgfortran.so")
-  # Not there
-  if [ -z "$findout" ]; then
-    echo "libgfortran.so not found. Try 'sudo find / -name "libgfortran.so"'"
-    echo "If found this way, use 'sudo ln -s FULLPATH /usr/local/lib'"
-  elif [ $(echo $findout | wc -w) == 1 ]; then
-    echo "Enter 'ln -s $findout /usr/local/lib'"
-  else
-    echo "Found more than one libgfortran.so:"
-    for f in $findout; do echo "  $f"; done
-    echo "Try 'ln -s FULLPATH /usr/local/lib' for one of then."
-    echo "If that doesn't work, 'rm -f /usr/local/lib/libgfortran.so'"
-    echo "and try with another"
-  fi
-fi
