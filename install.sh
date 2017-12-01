@@ -73,8 +73,8 @@ function install_deps() {
 
   if [ -z "$(ldconfig -p | grep libgfortran.so$)" ]; then
     if on_ubuntu; then
-      findout=$(find /usr/lib/gcc/x86_64-linux-gnu/ -name "libgfortran.so")
-      if [ -z "$findout" ]; then
+      findout=$(find /usr/lib/gcc/x86_64-linux-gnu/ -name "libgfortran.so" 2>/dev/null || echo "notfound")
+      if [[ "$findout" == "notfound" ]]; then
         echo "libgfortran.so not found in /usr/lib/gcc/x86_64-linux-gnu"
         findout=$(find /usr/lib -name "libgfortran.so")
       fi
