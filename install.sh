@@ -47,7 +47,7 @@ function link_libgfortran() {
       mkdir -p $LIBGFORTRANDEST
       if [ ! -w "$LIBGFORTRANDEST" ]; then
         SUDO=sudo
-        echo "Warning: Need sudo to link libgfortran.so from $lib to $LIBGFORTRANDEST"
+        echo -e "Warning: Need sudo to link libgfortran.so from\n$lib\nto\n$LIBGFORTRANDEST"
       fi
       $SUDO ln -s $lib $LIBGFORTRANDEST
       found="true"
@@ -172,7 +172,7 @@ for i in $(seq 0 3)
 do
   p=${packs[$i]}
   v=${versions[$i]}
-  if [ "${d_packs[$i]}" == "no" ]; then
+    if [ "${d_packs[$i]}" == "no" ]; then
     echo "$p already downloaded. Skipping"
     continue
   elif [ -d ${packs[$i]} ]; then
@@ -214,7 +214,8 @@ do
   cd cutest/objects/$MYARCH/$prec
   l=libcutest.a
   lname="$(basename $l .a)_$prec.so"
-  ld -fPIC -shared --whole-archive $l --no-whole-archive -o $lname -lgfortran
+  ld -fPIC -shared --whole-archive $l --no-whole-archive -o $lname \
+    $(readlink $LIBGFORTRANDEST/libgfortran.so)
   cd ../../../..
 done
 
