@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=0.3.2
+VERSION=0.3.3
 LIBGFORTRANDEST=/usr/local/lib
 
 set -e
@@ -135,7 +135,7 @@ link_libgfortran
 ## Download and unpack everything
 
 packs=(archdefs cutest mastsif sifdecode)
-versions=(0.2 0.4 0.3 0.4)
+versions=(0.2 0.4 0.4 0.4)
 service=(github github gitlab github)
 cutest_file=cutest_env.bashrc
 d_packs=(no no no no)
