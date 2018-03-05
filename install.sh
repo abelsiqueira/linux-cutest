@@ -2,10 +2,13 @@
 
 VERSION=0.3.3
 LIBGFORTRANDEST=/usr/local/lib
-packs=(archdefs cutest mastsif sifdecode)
-versions=(0.2 0.4 0.4 0.4)
+packs=(ARCHDefs CUTEst sif SIFDecode)
+packnames=(archdefs cutest mastsif sifdecode)
+versions=(2.0.0 2.0.0 0.4 2.0.0)
+service=(github github bitbucket github)
 
 set -e
+set -x
 
 function usage() {
   echo "Usage:
@@ -136,9 +139,8 @@ link_libgfortran
 
 ## Download and unpack everything
 
-service=(github github gitlab github)
-cutest_file=cutest_env.bashrc
 d_packs=(no no no no)
+cutest_file=cutest_env.bashrc
 
 # Check if cutest_file exists, and if only an updated is required
 if [ -f $cutest_file ]; then
@@ -172,23 +174,30 @@ for i in $(seq 0 3)
 do
   p=${packs[$i]}
   v=${versions[$i]}
-    if [ "${d_packs[$i]}" == "no" ]; then
+  pname=${packnames[$i]}
+  if [ "${d_packs[$i]}" == "no" ]; then
     echo "$p already downloaded. Skipping"
     continue
   elif [ -d ${packs[$i]} ]; then
     rm -rf ${packs[$i]}
   fi
   if [ ${service[$i]} == "github" ]; then
-    url="https://github.com/optimizers/${p}-mirror/archive/v$v.tar.gz"
+    url="https://github.com/ralna/${p}/archive/v$v.tar.gz"
   elif [ ${service[$i]} == "gitlab" ]; then
     url="https://gitlab.com/dpo/${p}-mirror/repository/archive.tar.gz?ref=v$v"
+  elif [ ${service[$i]} == "bitbucket" ]; then
+    url="https://bitbucket.org/optrove/${p}/get/v$v.tar.gz"
   fi
   wget $url -O $p.tar.gz
   output_dir=$(tar --exclude='*/*' -ztf $p.tar.gz)
   tar -zxf $p.tar.gz
-  mv $output_dir $p
+  mv $output_dir $pname
   rm -f $p.tar.gz
 done
+
+#### Fix ARCHDefs - remove when new version is release
+sed -i 's/CC=gcc-4.9/CC=gcc/g' $ARCHDEFS/ccompiler.pc64.lnx.gcc
+#### End fix
 
 if [ "$compile" == "yes" ]; then
   ## Sifdecode
@@ -243,7 +252,7 @@ do
 done
 
 ## Creating bashrc
-cat > cutest_env.bashrc << EOF
+cat > $cutest_file << EOF
 export ARCHDEFS=$PWD/archdefs
 export CUTEST=$PWD/cutest
 export SIFDECODE=$PWD/sifdecode
@@ -256,7 +265,7 @@ export LD_LIBRARY_PATH=$PWD/lib:\$LD_LIBRARY_PATH
 EOF
 for i in $(seq 0 3)
 do
-  echo "export ${packs[$i]}_version=${versions[$i]}" >> cutest_env.bashrc
+  echo "export ${packs[$i]}_version=${versions[$i]}" >> $cutest_file
 done
 
 echo "---"
