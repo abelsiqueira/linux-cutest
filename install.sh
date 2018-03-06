@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=0.3.3
+VERSION=0.3.4
 LIBGFORTRANDEST=/usr/local/lib
 packs=(ARCHDefs CUTEst sif SIFDecode)
 packnames=(archdefs cutest mastsif sifdecode)
