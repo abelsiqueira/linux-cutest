@@ -8,7 +8,6 @@ versions=(2.0.0 2.0.0 0.4 2.0.0)
 service=(github github bitbucket github)
 
 set -e
-set -x
 
 function usage() {
   echo "Usage:
