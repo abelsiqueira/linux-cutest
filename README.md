@@ -3,20 +3,21 @@
 [![Build Status](https://travis-ci.org/abelsiqueira/linux-cutest.svg?branch=master)](https://travis-ci.org/abelsiqueira/linux-cutest)
 
 This repository is solely for installing
-CUTEst in an easy way including shared libraries.
+CUTEst on Linux in an easy way including shared libraries.
 My only objective is to give support to a simple installation for a
 64 bits linux computer with gcc and gfortran.
 If you are using OSX, I suggest the great
 [homebrew-cutest](http://github.com/optimizers/homebrew-cutest).
+It also works with Linuxbrew, as an alternative to this installer.
 
 This script uses the git versions of the CUTEst repository, namely
-[cutest-mirror](http://github.com/optimizers/cutest-mirror),
-[sifdecode-mirror](http://github.com/optimizers/sifdecode-mirror),
-[archdefs-mirror](http://github.com/optimizers/archdefs-mirror),
-[mastsif-mirror](http://gitlab.com/dpo/mastsif-mirror).
+[CUTEst](http://github.com/ralna/CUTEst),
+[SIFDecode](http://github.com/ralna/SIFDecode),
+[ARCHDefs](http://github.com/ralna/ARCHDefs),
+[sif](http://bitbucket.org/optrove/sif).
 
 The Julia interface for CUTEst,
-[CUTEst.jl](http://github.com/JuliaOptimizers/CUTEst.jl),
+[CUTEst.jl](http://github.com/JuliaSmoothOptimizers/CUTEst.jl),
 uses this script to install CUTEst for linux.
 
 ## Install
