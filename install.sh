@@ -41,25 +41,19 @@ function link_libgfortran() {
   [ -z "$LIBGFORTRANDEST" ] && echo "Warning: LIBGFORTRANDEST is empty. Not linking." && return
   SUDO=""
   [ -f "$LIBGFORTRANDEST/libgfortran.so" ] && echo "Warning: libgfortran.so already found on $LIBGFORTRANDEST." && return
-  possible_paths=("/usr/local/lib" "/usr/lib/gcc/x86_64-linux-gnu/" "/usr/lib")
-  for path in ${possible_paths[@]}
-  do
-    findout=$(find $path -name "libgfortran.so" 2>/dev/null || echo "notfound")
-    [[ "$findout" == "notfound" ]] && continue
-    for lib in $findout
-    do
-      mkdir -p $LIBGFORTRANDEST
-      if [ ! -w "$LIBGFORTRANDEST" ]; then
-        SUDO=sudo
-        echo -e "Warning: Need sudo to link libgfortran.so from\n$lib\nto\n$LIBGFORTRANDEST"
-      fi
-      $SUDO ln -s $lib $LIBGFORTRANDEST
-      found="true"
-      return
-    done
-  done
-  echo "ERROR: libgfortran.so could not be found"
-  exit 1
+  if ! command -v gfortran &> /dev/null; then
+    echo "ERROR: gfortran not installed"
+    exit 1
+  fi
+  lib=$(gfortran --print-file libgfortran.so)
+  [ ! -f "$lib" ] && echo "ERROR: libgfortran.so not found by gfortran --print-file" && exit 1
+
+  mkdir -p $LIBGFORTRANDEST
+  if [ ! -w "$LIBGFORTRANDEST" ]; then
+    SUDO=sudo
+    echo -e "Warning: Need sudo to link libgfortran.so from\n$lib\nto\n$LIBGFORTRANDEST"
+  fi
+  $SUDO ln -s $lib $LIBGFORTRANDEST
 }
 
 function on_ubuntu() {
