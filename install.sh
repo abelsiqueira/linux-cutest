@@ -20,8 +20,8 @@ function usage() {
 
       -v, --version        Shows the version.
       -h, --help           Show this help.
-      --libgfortran-dest   Destination for a link to libgfortran.
-                           Defaults to /usr/local/lib.
+      --link-gfortran      Add a link to libgfortran on LIBGFORTRANDEST,
+                           which default to /usr/local/lib.
       --install-deps       Install the required dependencies. Mainly gsl-1.16 and
                            gfortran, but some distributions may require other
                            packages too.
@@ -98,9 +98,8 @@ while [[ $# -gt 0 ]]
 do
   key=$1
   case $key in
-    --libgfortran-dest)
-      LIBGFORTRANDEST=$2
-      shift
+    --link-gfortran)
+      create_libgfortran_link="yes"
       ;;
     --install-deps)
       force="yes"
@@ -128,7 +127,9 @@ if [ "$force" == "yes" ]; then
   install_deps
 fi
 
-link_libgfortran
+if [ "$create_libgfortran_link" == "yes" ]; then
+  link_libgfortran
+fi
 
 ## Download and unpack everything
 
@@ -217,7 +218,7 @@ do
   l=libcutest.a
   lname="$(basename $l .a)_$prec.so"
   ld -fPIC -shared --whole-archive $l --no-whole-archive -o $lname \
-    $(readlink $LIBGFORTRANDEST/libgfortran.so)
+    $(gfortran --print-file libgfortran.so)
   cd ../../../..
 done
 
