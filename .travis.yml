@@ -1,6 +1,10 @@
 language: bash
 
-sudo: required
+sudo:  required
+
+addons:
+  apt_packages:
+    - gfortran
 
 install:
   - bash install.sh --install-deps

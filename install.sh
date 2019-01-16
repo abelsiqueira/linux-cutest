@@ -56,17 +56,7 @@ function link_libgfortran() {
   $SUDO ln -s $lib $LIBGFORTRANDEST
 }
 
-function on_ubuntu() {
-  which apt-get &> /dev/null
-}
-
-function on_arch() {
-  which pacman &> /dev/null
-}
-
 function install_deps() {
-  on_ubuntu && cmd="sudo apt-get install gfortran"
-  on_arch && cmd="sudo pacman -S wget gzip gcc-fortran"
   [ ! -z "$cmd" ] && echo -e "Installing dependencies\n$cmd" && $cmd
 
   ## Install libgsl
