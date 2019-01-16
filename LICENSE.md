@@ -1,7 +1,7 @@
 # LICENSE.md
 
 Software description is at the [README](README.md).
-Copyright © 2016-2017 Abel Soares Siqueira
+Copyright © 2016-2019 Abel Soares Siqueira
 under the GNU General Public License v.3
 
 Notice that this is only a CUTEst installer. The CUTEst software itself is not

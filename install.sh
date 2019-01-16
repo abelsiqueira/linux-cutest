@@ -1,10 +1,10 @@
 #!/bin/bash
 
-VERSION=0.4.0
+VERSION=0.4.1
 LIBGFORTRANDEST=/usr/local/lib
 packs=(ARCHDefs CUTEst sif SIFDecode)
 packnames=(archdefs cutest mastsif sifdecode)
-versions=(2.0.0 2.0.0 0.4 2.0.0)
+versions=(2.0.3 2.0.2 master 2.0.1)
 service=(github github bitbucket github)
 
 set -e
@@ -29,7 +29,7 @@ function usage() {
 }
 
 function header() {
-  echo "linux-cutest $VERSION Copyright (C) 2016-2017  Abel Soares Siqueira
+  echo "linux-cutest $VERSION Copyright (C) 2016-2019  Abel Soares Siqueira
 This program comes with ABSOLUTELY NO WARRANTY;
 This is free software, and you are welcome to redistribute it
 under certain conditions; see LICENSE.md for details.
@@ -180,7 +180,7 @@ do
   elif [ ${service[$i]} == "gitlab" ]; then
     url="https://gitlab.com/dpo/${p}-mirror/repository/archive.tar.gz?ref=v$v"
   elif [ ${service[$i]} == "bitbucket" ]; then
-    url="https://bitbucket.org/optrove/${p}/get/v$v.tar.gz"
+    url="https://bitbucket.org/optrove/${p}/get/$v.tar.gz"
   fi
   wget $url -O $p.tar.gz
   output_dir=$(tar --exclude='*/*' -ztf $p.tar.gz)
@@ -200,7 +200,7 @@ if [ "$compile" == "yes" ]; then
   if [ -d objects/$MYARCH/double ]; then
     echo -e "1\ny\nn" | ./uninstall_sifdecode
   fi
-  echo -e "6\n2\n4\nnny" | ./install_sifdecode
+  echo -e "6\n2\n5\nnny" | ./install_sifdecode
   cd ..
 
   ## CUTEst
@@ -208,7 +208,7 @@ if [ "$compile" == "yes" ]; then
   if [ -d objects/$MYARCH/double ]; then
     echo -e "1\ny\nn" | ./uninstall_cutest
   fi
-  echo -e "6\n2\n4\n2\n7\nnnyDn" | ./install_cutest
+  echo -e "6\n2\n5\n2\n7\nnnyDn" | ./install_cutest
   cd ..
 fi
 
