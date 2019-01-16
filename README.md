@@ -22,14 +22,16 @@ uses this script to install CUTEst for linux.
 
 ## Install
 
-CUTEst has a few dependencies. If you want to let te script tries to install
-them to you, issue
+CUTEst has a few dependencies. You should be able to easily install `wget` and
+`gfortran` from your system package manager. It also needs `gsl-1.16`, which may not be
+the version your package manager has. If you want to let the script try to install
+`gsl-1.16` for you, just enter
 
     ./install.sh --install-deps
 
-If you tried to install automatically the dependencies and the script failed,
-you can help me by opening a pull-request or at least an issue informing what
-went wrong.
+If you tried to install automatically the dependencies and the script failed, you can
+help me by opening a pull-request with a fix or at least an issue informing what went
+wrong.
 
 To install manually the dependencies, check the [Requirements](#requirements),
 and then enter the command
