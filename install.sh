@@ -4,7 +4,7 @@ VERSION=0.4.1
 LIBGFORTRANDEST=/usr/local/lib
 packs=(ARCHDefs CUTEst sif SIFDecode)
 packnames=(archdefs cutest mastsif sifdecode)
-versions=(2.0.3 2.0.2 master 2.0.1)
+versions=(2.0.3 2.0.2 0.5 2.0.1)
 service=(github github bitbucket github)
 
 set -e
@@ -170,7 +170,7 @@ do
   elif [ ${service[$i]} == "gitlab" ]; then
     url="https://gitlab.com/dpo/${p}-mirror/repository/archive.tar.gz?ref=v$v"
   elif [ ${service[$i]} == "bitbucket" ]; then
-    url="https://bitbucket.org/optrove/${p}/get/$v.tar.gz"
+    url="https://bitbucket.org/optrove/${p}/get/v$v.tar.gz"
   fi
   wget $url -O $p.tar.gz
   output_dir=$(tar --exclude='*/*' -ztf $p.tar.gz)
