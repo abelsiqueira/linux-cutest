@@ -198,11 +198,11 @@ if [ "$compile" == "yes" ]; then
   if [ -d objects/$MYARCH/double ]; then
     echo -e "1\ny\nn" | ./uninstall_cutest
   fi
-  echo -e "6\n2\n5\n2\n7\nnnyDn" | ./install_cutest
+  echo -e "6\n2\n5\n2\n7\nnnyDy" | ./install_cutest
   cd ..
 fi
 
-for prec in double
+for prec in single double
 do
   cd cutest/objects/$MYARCH/$prec
   l=libcutest.a
@@ -222,7 +222,7 @@ for f in cutest2matlab runcutest
 do
   ln -sf $PWD/cutest/bin/$f bin/$f
 done
-for l in $(ls {sifdecode,cutest}/objects/$MYARCH/double/*.{a,so})
+for l in $(ls {sifdecode,cutest}/objects/$MYARCH/{single,double}/*.{a,so})
 do
   ln -sf $PWD/$l lib/
 done
